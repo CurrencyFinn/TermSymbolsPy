@@ -124,7 +124,7 @@ def calculateMsMl(m,totalMicrostate):
 
 
 start = time.time()
-totalMicroStateReturned = calcPossibleConfig(7,7,20000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
+totalMicroStateReturned = calcPossibleConfig(7,7,25000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
 end = time.time()
 print(end-start)
 with open("output.txt", "w") as f:
