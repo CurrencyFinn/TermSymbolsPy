@@ -71,9 +71,9 @@ def calcPossibleConfig(m,vElectron, limit):
             iCounter += 1
         else:
             iCounter = 0
-        previousi = i
+        previousi = i # instead of the 1000 check if a i number is returned a consequntive amount of time
         #if timesLooped >= limit: # start mixing  up
-        if iCounter >= limit: # start mixing  up # if it hit the limit it should go back into here!
+        if iCounter >= limit: # start mixing  up 
             p = i
             while p < nbConfiguration:
                 print(f"mixing state: {i}")
@@ -124,8 +124,11 @@ def calculateMsMl(m,totalMicrostate):
 
 
 start = time.time()
-totalMicroStateReturned = calcPossibleConfig(7,7,3000) # instead of the 1000 check if a i number is returned a consequntive amount of time
+totalMicroStateReturned = calcPossibleConfig(7,7,20000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
 end = time.time()
 print(end-start)
+with open("output.txt", "w") as f:
+    f.write("\n".join(str(item) for item in totalMicroStateReturned))
+
 print(calculateMsMl(3,totalMicroStateReturned))
-# can solve americum untill microstate 3421
+# can solve americum in 143.8940735s (7,7,20000)
