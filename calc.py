@@ -3,6 +3,7 @@ possibleconfig = [0,0.5,-0.5]
 from random import randint
 from random import sample
 import time
+import pandas as pd
 
 def is_close(a, b):
     return math.isclose(a, b, rel_tol=1e-09, abs_tol=0.0)
@@ -139,10 +140,21 @@ def TermTable(data):
         table[column].append(value)
     return table
 
+def VisTermTable(data):
+
+    columns_ordered = sorted([key for key in data.keys()])
+    df = pd.DataFrame(index=sorted(set(val for sublist in data.values() for val in sublist)), columns=columns_ordered)
+    for key, values in data.items():
+        column_name = key
+        df[column_name] = 0  # Initialize column with zeros
+        for value in values:
+            df.loc[value, column_name] += 1
+    return df
+
 if __name__ == "__main__":
-    insertedM = 5
+    insertedM = 7
     start = time.time()
-    totalMicroStateReturned = calcPossibleConfig(insertedM,5,5000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
+    totalMicroStateReturned = calcPossibleConfig(insertedM,7,30000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
     end = time.time()
     print(end-start)
 
@@ -150,6 +162,10 @@ if __name__ == "__main__":
         f.write("\n".join(str(item) for item in totalMicroStateReturned))
 
     calcMsMl = calculateMsMl(insertedM,totalMicroStateReturned)
-    print(TermTable(calcMsMl))
+    notOrderedTermTable = TermTable(calcMsMl)
+    print(notOrderedTermTable)
+    OrderTermTable = VisTermTable(notOrderedTermTable)
+
+    print(OrderTermTable)
 
     # can solve americum in 131.06236481666565 s (7,7,20000)
