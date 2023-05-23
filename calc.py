@@ -168,4 +168,4 @@ if __name__ == "__main__":
 
     print(OrderTermTable)
 
-    # can solve americum in 131.06236481666565 s (7,7,20000)
+    # can solve americum in 224 s (7,7,30000)
