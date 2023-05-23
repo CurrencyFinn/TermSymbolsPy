@@ -153,8 +153,9 @@ def VisTermTable(data):
 
 if __name__ == "__main__":
     insertedM = 7
+    electronInput = 7
     start = time.time()
-    totalMicroStateReturned = calcPossibleConfig(insertedM,7,30000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
+    totalMicroStateReturned = calcPossibleConfig(insertedM,electronInput,30000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
     end = time.time()
     print(end-start)
 
