@@ -12,7 +12,6 @@ def calcPossibleConfig(m,vElectron, limit):
     nbConfiguration = (math.factorial(m*2))/(math.factorial(vElectron)*math.factorial(m*2-vElectron))
     print(nbConfiguration)
     totalMicroStates = [[]] * int(nbConfiguration)
-    print(totalMicroStates)
 
     def mixAroundOrbitals(i):
         #empty_start_index = next((index for index, config in enumerate(totalMicroStates) if config == []), None)
@@ -41,13 +40,14 @@ def calcPossibleConfig(m,vElectron, limit):
                         while specificMicroState[j][0] == inputElectron: # pauli exclusion
                             inputInteger = randint(0,2)
                             inputElectron = possibleconfig[inputInteger]
+                        
                         if inputElectron == specificMicroState[j][0]*-1:
                             pluggedInElectrons+=1
                             specificMicroState[j][0] = 0.5
                             specificMicroState[j][1] = -0.5
                             k+=1
                             continue
-                        if specificMicroState[j][0] == 0 and inputElectron != 0:
+                        elif specificMicroState[j][0] == 0 and inputElectron != 0:
                             pluggedInElectrons+=1
                             specificMicroState[j][0] = inputElectron
                             specificMicroState[j][1] = 0
@@ -57,6 +57,8 @@ def calcPossibleConfig(m,vElectron, limit):
                             if inputElectron != 0:
                                 pluggedInElectrons+=1
                             specificMicroState[j][1] = inputElectron
+                            k+=1
+                            continue
 
                     else:
                         if inputElectron != 0:
@@ -71,6 +73,7 @@ def calcPossibleConfig(m,vElectron, limit):
             datCreatedMicroState = createMicroStates()
 
         #timesLooped += 1
+
         result = any(all(all(is_close(a, b) for a, b in zip(subarray_2d, input_array_2d)) for subarray_2d, input_array_2d in zip(subarray, datCreatedMicroState[0])) for subarray in totalMicroStates if subarray) and datCreatedMicroState[0] in totalMicroStates
         if previousi == i:
             iCounter += 1
@@ -151,13 +154,22 @@ def VisTermTable(data):
             df.loc[value, column_name] += 1
     return df
 
-if __name__ == "__main__":
-    insertedM = 7
-    electronInput = 7
-    start = time.time()
-    totalMicroStateReturned = calcPossibleConfig(insertedM,electronInput,30000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
-    end = time.time()
-    print(end-start)
+def logTimes(time,location):
+    df = pd.read_excel(location)
+    runNumber = int(df.iloc[-1]["Run"])+1
+    df = pd.concat([df, pd.DataFrame([[runNumber,round(time,5)]], columns=df.columns)], ignore_index=True)
+    df.to_excel(location, index=False)
+    print(df)
+
+def main(insertedM, electronInput):
+    time_ = 0
+    for i in range(0,5):
+        start = time.time()
+        totalMicroStateReturned = calcPossibleConfig(insertedM,electronInput,30000) # do systematic amount of mixing go over every microstate do x times mixing for all configurations decrease the amount of random
+        end = time.time()
+        time_ += end-start
+    avgTime = time_/(i+1)
+    logTimes(avgTime,"RunTimes.xlsx")
 
     with open("output.txt", "w") as f:
         f.write("\n".join(str(item) for item in totalMicroStateReturned))
@@ -168,5 +180,11 @@ if __name__ == "__main__":
     OrderTermTable = VisTermTable(notOrderedTermTable)
 
     print(OrderTermTable)
+
+if __name__ == "__main__":
+    insertedM = 3
+    electronInput = 3
+    main(insertedM,electronInput)
+    
 
     # can solve americum in 224 s (7,7,30000)
